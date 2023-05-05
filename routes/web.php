@@ -21,9 +21,15 @@ $router->group(["prefix" => "api"], function () use ($router) {
 
     $router->get("comments", ["uses" => 'AppController@showAllComments']);
 
-    $router->get('author/{id}', ['uses' => 'AppController@showAuthorComments']);
+    $router->get("validcomments", ["uses" => 'AppController@showAllValidatedComments']);
 
-    $router->post('author/{id}/create', ['uses' => 'AppController@createComment']);
+    $router->get("film/{id}", ["uses" => 'AppController@showCommentsByFilm']);
+
+    $router->get("film/{id}/validcomments", ["uses" => 'AppController@showAllValidatedCommentsByFilm']);
+
+    $router->get('author/{id}', ['uses' => 'AppController@showCommentsByAuthor']);
+
+    $router->post('create', ['uses' => 'AppController@createComment']);
 
     $router->delete('comments/{id}', ['uses' => 'AppController@deleteComment']);
 

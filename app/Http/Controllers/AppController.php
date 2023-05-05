@@ -22,16 +22,34 @@ class AppController extends BaseController
   function showAllComments()
   {
     // return response()->json(Comment::all());
-    return $this->appRepository->selectAll();
+    return $this->appRepository->selectAllJoined();
   }
 
-  function showAuthorComments($id)
+  function showAllValidatedComments()
+  {
+    // return response()->json(Comment::all());
+    return $this->appRepository->selectAllValidated();
+  }
+
+  function showAllValidatedCommentsByFilm($id)
+  {
+    // return response()->json(Comment::all());
+    return $this->appRepository->selectAllValidatedByFilm($id);
+  }
+
+  function showCommentsByAuthor($id)
   {
     // return response()->json(Author::find($id));
-    return $this->appRepository->selectById($id);
+    return $this->appRepository->selectAuthorById($id);
   }
 
-  function createComment(Request $request, $id)
+  function showCommentsByFilm($id)
+  {
+    // return response()->json(Author::find($id));
+    return $this->appRepository->selectFilmById($id);
+  }
+
+  function createComment(Request $request)
   {
     // $this->validate($request, [
     //   'title' => 'required',
@@ -42,7 +60,7 @@ class AppController extends BaseController
 
     // return response()->json($comment, 201);
 
-    return $this->appRepository->createNew($request, $id);
+    return $this->appRepository->createNew($request);
   }
 
   function deleteComment($id)
@@ -52,15 +70,15 @@ class AppController extends BaseController
 
   function update($id, Request $request)
   {
-    $author = Author::findOrFail($id);
-    $author->update($request->all());
+    // $author = Author::findOrFail($id);
+    // $author->update($request->all());
 
-    return response()->json($author, 200);
+    // return response()->json($author, 200);
   }
 
-  function delete($id)
-  {
-    Author::findOrFail($id)->delete();
-    return response('Deleted Successfully', 200);
-  }
+  // function delete($id)
+  // {
+  //   Author::findOrFail($id)->delete();
+  //   return response('Deleted Successfully', 200);
+  // }
 }
