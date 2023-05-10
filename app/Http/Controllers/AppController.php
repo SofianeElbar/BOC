@@ -37,6 +37,12 @@ class AppController extends BaseController
     return $this->appRepository->selectAllValidatedByFilm($id);
   }
 
+  function showAuthorsByFilm($id)
+  {
+    // return response()->json(Comment::all());
+    return $this->appRepository->selectAuthorsByFilm($id);
+  }
+
   function showCommentsByAuthor($id)
   {
     // return response()->json(Author::find($id));
@@ -47,6 +53,12 @@ class AppController extends BaseController
   {
     // return response()->json(Author::find($id));
     return $this->appRepository->selectFilmById($id);
+  }
+
+  function showPseudoByAuthor($id)
+  {
+    // return response()->json(Author::find($id));
+    return $this->appRepository->selectPseudoByAuthor($id);
   }
 
   function createComment(Request $request)
@@ -66,6 +78,16 @@ class AppController extends BaseController
   function deleteComment($id)
   {
     return $this->appRepository->deleteCurrent($id);
+  }
+
+  function validateComment($id, Request $request)
+  {
+    return $this->appRepository->validateCurrent($id);
+  }
+
+  function rejectComment($id, Request $request)
+  {
+    return $this->appRepository->rejectCurrent($id);
   }
 
   function update($id, Request $request)
