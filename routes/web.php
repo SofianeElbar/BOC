@@ -29,7 +29,7 @@ $router->group(["prefix" => "api"], function () use ($router) {
 
     $router->get("film/{id}/validcomments", ["uses" => 'AppController@showAllValidatedCommentsByFilm']);
 
-    $router->get('author/{id}', ['uses' => 'AppController@showCommentsByAuthor']);
+    $router->get('author/{id}/validcomments', ['uses' => 'AppController@showAllValidatedCommentsByAuthor']);
 
     $router->get('author/{id}/pseudo', ['uses' => 'AppController@showPseudoByAuthor']);
 
@@ -38,6 +38,10 @@ $router->group(["prefix" => "api"], function () use ($router) {
     $router->delete('comments/{id}', ['uses' => 'AppController@deleteComment']);
 
     $router->put('comments/{id}', ['uses' => 'AppController@updateComment']);
+
+    $router->put('changestatus/{id}', ['uses' => 'AppController@changeCommentStatus']);
+
+    $router->put('modify/{id}', ['uses' => 'AppController@modifyComment']);
 
     $router->put('validate/{id}', ['uses' => 'AppController@validateComment']);
 

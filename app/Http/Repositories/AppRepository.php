@@ -3,9 +3,11 @@
 namespace App\Http\Repositories;
 
 use Illuminate\Support\Facades\DB;
+use App\Providers\AppServiceProvider;
 
 class AppRepository
 {
+
   function selectAll()
   {
     $array = DB::select("SELECT * FROM comments");
@@ -16,31 +18,40 @@ class AppRepository
 
   function selectAllJoined()
   {
+
+    // Query
+
     $array = DB::select("SELECT * FROM comments JOIN moderations ON moderations.id_comment_fk=comments.id_comment JOIN subscribers ON subscribers.id_subscriber=comments.id_subscriber_fk");
 
-    return $array;
+    // Translation
+
+    return AppServiceProvider::translateIntoObject($array);
   }
 
   function selectAllValidated()
   {
-    $array = DB::select("SELECT * FROM comments JOIN moderations ON moderations.id_comment_fk=comments.id_comment JOIN subscribers ON subscribers.id_subscriber=comments.id_subscriber_fk WHERE status = 'Valide'");
+    $array = DB::select("SELECT * FROM comments JOIN moderations ON moderations.id_comment_fk=comments.id_comment JOIN subscribers ON subscribers.id_subscriber=comments.id_subscriber_fk WHERE status = 1");
 
     return $array;
   }
 
-  function selectAuthorById($id)
+  function selectAllValidatedByAuthor($id)
   {
-    // var_dump($id);
-    $array = DB::select("SELECT * FROM comments WHERE id_subscriber_fk = $id");
+    $array = DB::select("SELECT * FROM comments JOIN moderations ON moderations.id_comment_fk=comments.id_comment JOIN subscribers ON subscribers.id_subscriber=comments.id_subscriber_fk WHERE status = 1 AND id_kinow = $id");
 
-    return $array;
+    return AppServiceProvider::translateIntoObject($array);
   }
 
   function selectAllValidatedByFilm($id)
   {
-    $array = DB::select("SELECT * FROM comments JOIN moderations ON moderations.id_comment_fk=comments.id_comment JOIN subscribers ON subscribers.id_subscriber=comments.id_subscriber_fk WHERE status = 'Valide' AND id_film = $id");
 
-    return $array;
+    // Query
+
+    $array = DB::select("SELECT * FROM comments JOIN moderations ON moderations.id_comment_fk=comments.id_comment JOIN subscribers ON subscribers.id_subscriber=comments.id_subscriber_fk WHERE status = 1 AND id_film = $id");
+
+    // Translation
+
+    return AppServiceProvider::translateIntoObject($array);
   }
 
   function selectFilmById($id)
@@ -61,7 +72,7 @@ class AppRepository
 
   function selectPseudoByAuthor($id)
   {
-    // var_dump($id);
+
     $array = DB::select("SELECT pseudo FROM subscribers WHERE id_kinow=$id");
 
     return $array;
@@ -78,7 +89,10 @@ class AppRepository
 
     // Pseudo verification
 
-    $pseudo_exists = DB::selectOne("SELECT pseudo FROM subscribers WHERE id_kinow=?", [$id_kinow])->pseudo;
+    $result = DB::selectOne("SELECT pseudo FROM subscribers WHERE id_kinow = ?", [$id_kinow]);
+    $pseudo_exists = $result ? $result->pseudo : "";
+
+    var_dump($result, $pseudo, $pseudo_exists);
 
     if ($pseudo === $pseudo_exists) {
       $subscriber_id = DB::selectOne("SELECT id_subscriber FROM subscribers WHERE id_kinow=?", [$id_kinow])->id_subscriber;
@@ -93,7 +107,7 @@ class AppRepository
 
     $comment_id = DB::getPdo()->lastInsertId();
 
-    $moderation = DB::insert("INSERT INTO moderations (id_comment_fk, id_moderator_fk, status) VALUES (?, ?, ?)", [$comment_id, 27, 'A moderer']);
+    $moderation = DB::insert("INSERT INTO moderations (id_comment_fk, id_moderator_fk, status) VALUES (?, ?, ?)", [$comment_id, 27, 'Valide']);
 
     return "Added successfully";
   }
@@ -105,16 +119,23 @@ class AppRepository
     return "Removed successfully";
   }
 
+  function changeCurrent($id)
+  {
+    $array = DB::select("UPDATE moderations SET status = (CASE WHEN status = 0 THEN 1 ELSE 0 END) WHERE moderations.id_comment_fk = $id");
+
+    return "Update successfully";
+  }
+
   function validateCurrent($id)
   {
-    $array = DB::select("UPDATE moderations SET status = 'Valide' WHERE moderations.id_comment_fk = $id");
+    $array = DB::select("UPDATE moderations SET status = 1 WHERE moderations.id_comment_fk = $id");
 
     return "Update successfully";
   }
 
   function rejectCurrent($id)
   {
-    $array = DB::select("UPDATE moderations SET status = 'Rejete' WHERE moderations.id_comment_fk = $id");
+    $array = DB::select("UPDATE moderations SET status = 0 WHERE moderations.id_comment_fk = $id");
 
     return "Update successfully";
   }
