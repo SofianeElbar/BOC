@@ -35,6 +35,8 @@ $router->group(["prefix" => "api"], function () use ($router) {
 
     $router->put('author/{id}/modifypseudo/{pseudo}', ['uses' => 'AppController@modifyPseudoByAuthor']);
 
+    $router->get('author/{idKinow}/film/{idFilm}/validcomments', ['uses' => 'AppController@showAllValidatedCommentsByAuthorbyFilm']);
+
     $router->post('create', ['uses' => 'AppController@createComment']);
 
     $router->delete('comments/{id}', ['uses' => 'AppController@deleteComment']);

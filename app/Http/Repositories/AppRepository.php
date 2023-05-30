@@ -54,6 +54,13 @@ class AppRepository
     return AppServiceProvider::translateIntoObject($array);
   }
 
+  function selectAllValidatedByAuthorByFilm($idKinow, $idFilm)
+  {
+    $array = DB::select("SELECT * FROM comments JOIN moderations ON moderations.id_comment_fk=comments.id_comment JOIN subscribers ON subscribers.id_subscriber=comments.id_subscriber_fk WHERE status = 'Valide' AND id_kinow = $idKinow");
+
+    return AppServiceProvider::translateIntoObject($array);
+  }
+
   function selectFilmById($id)
   {
     // var_dump($id);

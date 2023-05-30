@@ -43,6 +43,11 @@ class AppController extends BaseController
     return $this->appRepository->selectAllValidatedByAuthor($id);
   }
 
+  function showAllValidatedCommentsByAuthorbyFilm($idKinow, $idFilm)
+  {
+    return $this->appRepository->selectAllValidatedByAuthorByFilm($idKinow, $idFilm);
+  }
+
   function showAuthorsByFilm($id)
   {
     // return response()->json(Comment::all());
