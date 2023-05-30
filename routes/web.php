@@ -33,6 +33,8 @@ $router->group(["prefix" => "api"], function () use ($router) {
 
     $router->get('author/{id}/pseudo', ['uses' => 'AppController@showPseudoByAuthor']);
 
+    $router->put('author/{id}/modifypseudo/{pseudo}', ['uses' => 'AppController@modifyPseudoByAuthor']);
+
     $router->post('create', ['uses' => 'AppController@createComment']);
 
     $router->delete('comments/{id}', ['uses' => 'AppController@deleteComment']);
@@ -42,6 +44,8 @@ $router->group(["prefix" => "api"], function () use ($router) {
     $router->put('changestatus/{id}', ['uses' => 'AppController@changeCommentStatus']);
 
     $router->put('modify/{id}', ['uses' => 'AppController@modifyComment']);
+
+    $router->put('moderate/{id}', ['uses' => 'AppController@moderateComment']);
 
     $router->put('validate/{id}', ['uses' => 'AppController@validateComment']);
 

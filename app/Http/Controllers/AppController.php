@@ -61,6 +61,12 @@ class AppController extends BaseController
     return $this->appRepository->selectPseudoByAuthor($id);
   }
 
+  function modifyPseudoByAuthor($id, $pseudo)
+  {
+    // return response()->json(Author::find($id));
+    return $this->appRepository->updatePseudoByAuthor($id, $pseudo);
+  }
+
   function createComment(Request $request)
   {
     // $this->validate($request, [
@@ -78,6 +84,11 @@ class AppController extends BaseController
   function deleteComment($id)
   {
     return $this->appRepository->deleteCurrent($id);
+  }
+
+  function moderateComment($id, Request $request)
+  {
+    return $this->appRepository->moderateCurrent($id);
   }
 
   function validateComment($id, Request $request)

@@ -30,14 +30,14 @@ class AppRepository
 
   function selectAllValidated()
   {
-    $array = DB::select("SELECT * FROM comments JOIN moderations ON moderations.id_comment_fk=comments.id_comment JOIN subscribers ON subscribers.id_subscriber=comments.id_subscriber_fk WHERE status = 1");
+    $array = DB::select("SELECT * FROM comments JOIN moderations ON moderations.id_comment_fk=comments.id_comment JOIN subscribers ON subscribers.id_subscriber=comments.id_subscriber_fk WHERE status = 'Valide'");
 
     return $array;
   }
 
   function selectAllValidatedByAuthor($id)
   {
-    $array = DB::select("SELECT * FROM comments JOIN moderations ON moderations.id_comment_fk=comments.id_comment JOIN subscribers ON subscribers.id_subscriber=comments.id_subscriber_fk WHERE status = 1 AND id_kinow = $id");
+    $array = DB::select("SELECT * FROM comments JOIN moderations ON moderations.id_comment_fk=comments.id_comment JOIN subscribers ON subscribers.id_subscriber=comments.id_subscriber_fk WHERE status = 'Valide' AND id_kinow = $id");
 
     return AppServiceProvider::translateIntoObject($array);
   }
@@ -47,7 +47,7 @@ class AppRepository
 
     // Query
 
-    $array = DB::select("SELECT * FROM comments JOIN moderations ON moderations.id_comment_fk=comments.id_comment JOIN subscribers ON subscribers.id_subscriber=comments.id_subscriber_fk WHERE status = 1 AND id_film = $id");
+    $array = DB::select("SELECT * FROM comments JOIN moderations ON moderations.id_comment_fk=comments.id_comment JOIN subscribers ON subscribers.id_subscriber=comments.id_subscriber_fk WHERE status = 'Valide' AND id_film = $id");
 
     // Translation
 
@@ -74,6 +74,14 @@ class AppRepository
   {
 
     $array = DB::select("SELECT pseudo FROM subscribers WHERE id_kinow=$id");
+
+    return $array;
+  }
+
+  function updatePseudoByAuthor($id, $pseudo)
+  {
+
+    $array = DB::select("UPDATE subscribers SET pseudo = '$pseudo' WHERE id_kinow = $id");
 
     return $array;
   }
@@ -126,16 +134,23 @@ class AppRepository
     return "Update successfully";
   }
 
+  function moderateCurrent($id)
+  {
+    $array = DB::select("UPDATE moderations SET status = 'A relire' WHERE moderations.id_comment_fk = $id");
+
+    return "Update successfully";
+  }
+
   function validateCurrent($id)
   {
-    $array = DB::select("UPDATE moderations SET status = 1 WHERE moderations.id_comment_fk = $id");
+    $array = DB::select("UPDATE moderations SET status = 'Valide' WHERE moderations.id_comment_fk = $id");
 
     return "Update successfully";
   }
 
   function rejectCurrent($id)
   {
-    $array = DB::select("UPDATE moderations SET status = 0 WHERE moderations.id_comment_fk = $id");
+    $array = DB::select("UPDATE moderations SET status = 'Rejete' WHERE moderations.id_comment_fk = $id");
 
     return "Update successfully";
   }
