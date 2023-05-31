@@ -39,7 +39,7 @@ $router->group(["prefix" => "api"], function () use ($router) {
 
     $router->post('create', ['uses' => 'AppController@createComment']);
 
-    $router->delete('comments/{id}', ['uses' => 'AppController@deleteComment']);
+    $router->delete('delete/{id}', ['uses' => 'AppController@deleteComment']);
 
     $router->put('comments/{id}', ['uses' => 'AppController@updateComment']);
 
