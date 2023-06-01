@@ -37,7 +37,7 @@ class AppRepository
 
   function selectAllValidatedByAuthor($id)
   {
-    $array = DB::select("SELECT * FROM comments JOIN moderations ON moderations.id_comment_fk=comments.id_comment JOIN subscribers ON subscribers.id_subscriber=comments.id_subscriber_fk WHERE status = 'Valide' OR status = 'Rejete' OR status='A relire' AND id_kinow = $id");
+    $array = DB::select("SELECT * FROM comments JOIN moderations ON moderations.id_comment_fk=comments.id_comment JOIN subscribers ON subscribers.id_subscriber=comments.id_subscriber_fk WHERE status IN ('Valide', 'Rejete', 'A relire') AND id_kinow = $id");
 
     return AppServiceProvider::translateIntoObject($array);
   }
@@ -47,7 +47,7 @@ class AppRepository
 
     // Query
 
-    $array = DB::select("SELECT * FROM comments JOIN moderations ON moderations.id_comment_fk=comments.id_comment JOIN subscribers ON subscribers.id_subscriber=comments.id_subscriber_fk WHERE status = 'Valide' AND status = 'A relire' AND id_film = $id");
+    $array = DB::select("SELECT * FROM comments JOIN moderations ON moderations.id_comment_fk=comments.id_comment JOIN subscribers ON subscribers.id_subscriber=comments.id_subscriber_fk WHERE status IN ('Valide', 'A relire') AND id_film = $id");
 
     // Translation
 
@@ -56,7 +56,7 @@ class AppRepository
 
   function selectAllValidatedByAuthorByFilm($idKinow, $idFilm)
   {
-    $array = DB::select("SELECT * FROM comments JOIN moderations ON moderations.id_comment_fk=comments.id_comment JOIN subscribers ON subscribers.id_subscriber=comments.id_subscriber_fk WHERE status = 'Valide' AND id_kinow = $idKinow");
+    $array = DB::select("SELECT * FROM comments JOIN moderations ON moderations.id_comment_fk=comments.id_comment JOIN subscribers ON subscribers.id_subscriber=comments.id_subscriber_fk WHERE status = 'Valide' AND id_kinow = $idKinow AND film_title == $idFilm");
 
     return AppServiceProvider::translateIntoObject($array);
   }
@@ -88,7 +88,7 @@ class AppRepository
   function updatePseudoByAuthor($id, $pseudo)
   {
 
-    $array = DB::select("UPDATE subscribers SET pseudo = '$pseudo' WHERE id_kinow = $id");
+    $array = DB::select("UPDATE subscribers SET pseudo = '$pseudo' WHERE id_kinow = $id UPDATE");
 
     return $array;
   }
@@ -119,7 +119,7 @@ class AppRepository
       $subscriber_id = DB::getPdo()->lastInsertId();
     }
 
-    $comment = DB::insert("INSERT INTO comments (id_subscriber_fk, id_film, film_title, title, content) VALUES (?, ?, ?, ?, ?)", [$subscriber_id, $id_film, $film_title, $title, $content]);
+    $comment = DB::insert("INSERT INTO comments (id_subscriber_fk, id_film, film_title, title, content) VALUES (?, ?, ?, ?, ?)", [$subscriber_id, $id_film, $film_title, `L'avis de $pseudo`, $content]);
 
     $comment_id = DB::getPdo()->lastInsertId();
 
