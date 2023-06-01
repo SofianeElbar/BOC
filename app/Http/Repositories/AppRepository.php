@@ -37,7 +37,7 @@ class AppRepository
 
   function selectAllValidatedByAuthor($id)
   {
-    $array = DB::select("SELECT * FROM comments JOIN moderations ON moderations.id_comment_fk=comments.id_comment JOIN subscribers ON subscribers.id_subscriber=comments.id_subscriber_fk WHERE status = 'Valide' AND id_kinow = $id");
+    $array = DB::select("SELECT * FROM comments JOIN moderations ON moderations.id_comment_fk=comments.id_comment JOIN subscribers ON subscribers.id_subscriber=comments.id_subscriber_fk WHERE status = 'Valide' OR status = 'Rejete' OR status='A relire' AND id_kinow = $id");
 
     return AppServiceProvider::translateIntoObject($array);
   }
@@ -47,7 +47,7 @@ class AppRepository
 
     // Query
 
-    $array = DB::select("SELECT * FROM comments JOIN moderations ON moderations.id_comment_fk=comments.id_comment JOIN subscribers ON subscribers.id_subscriber=comments.id_subscriber_fk WHERE status = 'Valide' AND id_film = $id");
+    $array = DB::select("SELECT * FROM comments JOIN moderations ON moderations.id_comment_fk=comments.id_comment JOIN subscribers ON subscribers.id_subscriber=comments.id_subscriber_fk WHERE status = 'Valide' AND status = 'A relire' AND id_film = $id");
 
     // Translation
 
@@ -97,6 +97,7 @@ class AppRepository
   {
     $title = $request["title"];
     $content = $request["content"];
+    $email = $request["email"];
     $pseudo = $request["pseudo"];
     $id_kinow = $request["id_kinow"];
     $id_film = $request["id_film"];
@@ -113,7 +114,7 @@ class AppRepository
       $subscriber_id = DB::selectOne("SELECT id_subscriber FROM subscribers WHERE id_kinow=?", [$id_kinow])->id_subscriber;
     } else {
 
-      $subscriber = DB::insert("INSERT INTO subscribers (id_kinow, pseudo) VALUES (?, ?)", [$id_kinow, $pseudo]);
+      $subscriber = DB::insert("INSERT INTO subscribers (id_kinow, email, pseudo) VALUES (?, ?, ?)", [$id_kinow, $email, $pseudo]);
 
       $subscriber_id = DB::getPdo()->lastInsertId();
     }

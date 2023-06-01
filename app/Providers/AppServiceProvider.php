@@ -28,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
             $subresult['content'] = $comment->content;
             $subresult['created_at'] = $comment->created_at;
 
-            $subresult['subscriber'] = ["id" => $comment->id_subscriber, "pseudo" => $comment->pseudo, "id_kinow" => $comment->id_kinow];
+            $subresult['subscriber'] = ["id" => $comment->id_subscriber, "email" => $comment->email, "pseudo" => $comment->pseudo, "id_kinow" => $comment->id_kinow];
 
             $subresult['film'] = ["id" => $comment->id_film, "title" => $comment->film_title];
 
