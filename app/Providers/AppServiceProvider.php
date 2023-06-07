@@ -3,6 +3,10 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Models\Comment;
+use App\Models\Subscriber;
+use App\Models\Film;
+use App\Models\Moderation;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -16,25 +20,37 @@ class AppServiceProvider extends ServiceProvider
         //
     }
 
-    static function translateIntoObject($array)
+    static function translateIntoArrayofObjects($array)
     {
         $result = [];
 
-        foreach ($array as $key => $comment) {
-            $subresult = [];
+        foreach ($array as $key => $data) {
+            $resultObject = new Comment();
 
-            $subresult['id'] = $comment->id_comment;
-            $subresult['title'] = $comment->title;
-            $subresult['content'] = $comment->content;
-            $subresult['created_at'] = $comment->created_at;
+            $resultObject->id = $data->id_comment;
+            $resultObject->title = $data->title;
+            $resultObject->content = $data->content;
+            $resultObject->created_at = $data->created_at;
 
-            $subresult['subscriber'] = ["id" => $comment->id_subscriber, "email" => $comment->email, "pseudo" => $comment->pseudo, "id_kinow" => $comment->id_kinow];
+            $subscriber = new Subscriber();
+            $subscriber->id = $data->id_subscriber;
+            $subscriber->id_kinow = $data->id_kinow;
+            $subscriber->email = $data->email;
+            $subscriber->pseudo = $data->pseudo;
+            $resultObject->subscriber = $subscriber;
 
-            $subresult['film'] = ["id" => $comment->id_film, "title" => $comment->film_title];
+            $film = new Film();
+            $film->id = $data->id_film;
+            $film->title = $data->film_title;
+            $resultObject->film = $film;
 
-            $subresult['moderation'] = ["id" => $comment->id_moderation, "status" => $comment->status, "reason" => $comment->motif];
+            $moderation = new Moderation();
+            $moderation->id = $data->id_moderation;
+            $moderation->status = $data->status;
+            $moderation->reason = $data->motif;
+            $resultObject->moderation = $moderation;
 
-            $result[] = $subresult;
+            $result[] = $resultObject;
         }
 
         return $result;

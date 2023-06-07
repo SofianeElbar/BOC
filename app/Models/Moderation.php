@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Comment extends Model
+class Moderation extends Model
 {
 
     /**
@@ -13,12 +13,11 @@ class Comment extends Model
      * @var array
      */
     protected $fillable = [
-        'id_comment',
-        'id_subscriber_fk',
-        'title',
-        'content',
-        'created_at',
-        'email'
+        'id_moderation',
+        'id_comment_fk',
+        'id_moderator_fk',
+        'status',
+        'motif'
     ];
 
     /**

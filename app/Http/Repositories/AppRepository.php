@@ -88,7 +88,7 @@ class AppRepository
   function updatePseudoByAuthor($id, $pseudo)
   {
 
-    $array = DB::select("UPDATE subscribers SET pseudo = '$pseudo' WHERE id_kinow = $id UPDATE");
+    $array = DB::select("UPDATE subscribers SET pseudo = '$pseudo' WHERE id_kinow = $id");
 
     return $array;
   }

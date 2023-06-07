@@ -19,30 +19,45 @@ $router->get('/', function () use ($router) {
 
 $router->group(["prefix" => "api"], function () use ($router) {
 
-    $router->get("comments", ["uses" => 'AppController@showAllComments']);
+    /*
+|--------------------------------------------------------------------------
+| Comment Routes
+|--------------------------------------------------------------------------
+*/
 
-    $router->get("validcomments", ["uses" => 'AppController@showAllValidatedComments']);
+    $router->get("allcomments", ["uses" => 'CommentController@getAllComments']);
 
-    $router->get("film/{id}", ["uses" => 'AppController@showCommentsByFilm']);
+    $router->get("allvalidcomments", ["uses" => 'CommentController@getAllValidComments']);
 
-    $router->get("film/{id}/authors", ["uses" => 'AppController@showAuthorsByFilm']);
+    $router->post("film/allcomments", ["uses" => 'CommentController@getAllCommentsByFilm']);
 
-    $router->get("film/{id}/validcomments", ["uses" => 'AppController@showAllValidatedCommentsByFilm']);
+    $router->post("film/allvalidcomments", ["uses" => 'CommentController@getAllValidCommentsByFilm']);
 
-    $router->get('author/{id}/validcomments', ['uses' => 'AppController@showAllValidatedCommentsByAuthor']);
+    // $router->get("film/{id}/authors", ["uses" => 'AppController@showAuthorsByFilm']);
 
-    $router->get('author/{id}/pseudo', ['uses' => 'AppController@showPseudoByAuthor']);
+    /*
+|--------------------------------------------------------------------------
+| Subscriber Routes
+|--------------------------------------------------------------------------
+*/
 
-    $router->put('author/{id}/modifypseudo/{pseudo}', ['uses' => 'AppController@modifyPseudoByAuthor']);
+    $router->post('subscriber/allcomments', ['uses' => 'SubscriberController@getAllCommentsBySubscriber']);
 
-    $router->get('author/{idKinow}/film/{idFilm}/validcomments', ['uses' => 'AppController@showAllValidatedCommentsByAuthorbyFilm']);
+    $router->post('subscriber/pseudo', ['uses' => 'SubscriberController@getPseudo']);
 
-    $router->post('create', ['uses' => 'AppController@createComment']);
+    $router->put('subscriber/modifypseudo', ['uses' => 'SubscriberController@modifyPseudo']);
+
+    $router->post('subscriber/alreadycommented', ['uses' => 'SubscriberController@alreadyCommented']);
+
+    $router->post('create', ['uses' => 'SubscriberController@createComment']);
+
+
 
     $router->delete('delete/{id}', ['uses' => 'AppController@deleteComment']);
 
     $router->put('comments/{id}', ['uses' => 'AppController@updateComment']);
 
+    // Moderation routes
     $router->put('changestatus/{id}', ['uses' => 'AppController@changeCommentStatus']);
 
     $router->put('modify/{id}', ['uses' => 'AppController@modifyComment']);
