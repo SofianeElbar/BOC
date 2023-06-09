@@ -15,7 +15,6 @@ class Comment extends Model
     protected $fillable = [
         'id_comment',
         'id_subscriber_fk',
-        'title',
         'content',
         'created_at',
         'email'

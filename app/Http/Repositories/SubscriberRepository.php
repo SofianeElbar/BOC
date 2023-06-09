@@ -7,6 +7,12 @@ use Illuminate\Support\Facades\DB;
 class SubscriberRepository
 {
 
+  function sanitizeInput($input)
+  {
+    $sanitizedInput = htmlspecialchars($input, ENT_QUOTES, 'UTF-8');
+    return $sanitizedInput;
+  }
+
   function getAllCommentsBySubscriber($id)
   {
 
@@ -21,12 +27,12 @@ class SubscriberRepository
     return $array;
   }
 
-  function getPseudo($id_kinow, $email)
+  function getPseudo($id_kinow)
   {
 
-    $query = "SELECT pseudo, :email AS email FROM subscribers WHERE id_kinow = :id_kinow";
+    $query = "SELECT pseudo FROM subscribers WHERE id_kinow = :id_kinow";
 
-    $bindings = ['id_kinow' => $id_kinow, 'email' => $email];
+    $bindings = ['id_kinow' => $id_kinow];
 
     $array = DB::select($query, $bindings);
 
@@ -36,13 +42,15 @@ class SubscriberRepository
   function modifyPseudo($id, $pseudo)
   {
 
+    $cleanPseudo = $this->sanitizeInput($pseudo);
+
     $query = "UPDATE subscribers SET pseudo = :pseudo WHERE id_kinow = :id";
 
-    $bindings = ['id' => $id, 'pseudo' => $pseudo];
+    $bindings = ['id' => $id, 'pseudo' => $cleanPseudo];
 
-    $array = DB::select($query, $bindings);
+    $array = DB::update($query, $bindings);
 
-    return true;
+    return $array > 0;
   }
 
   function alreadyCommented($id_kinow, $id_film)
@@ -59,47 +67,31 @@ class SubscriberRepository
 
     $array = DB::select($query, $bindings);
 
-    return $array;
+    return (bool) $array;
   }
 
-  function createComment($cleanContent, $email, $cleanPseudo, $id_kinow, $id_film, $film_title, $exists)
+  function getSubscriberDatabaseId($id_kinow)
+  {
+    $query = "SELECT id_subscriber FROM subscribers WHERE id_kinow = :id_kinow";
+
+    $bindings = ['id_kinow' => $id_kinow];
+
+    $id_subscriber = DB::selectOne($query, $bindings);
+
+    return $id_subscriber ? $id_subscriber->id_subscriber : null;
+  }
+
+  function createSubscriberInDatabase($id_kinow, $email, $pseudo)
   {
 
-    if ($exists) {
-      // Don't create a subscriber row
-      $query = "SELECT id_subscriber FROM subscribers WHERE id_kinow = :id_kinow";
+    $cleanPseudo = $this->sanitizeInput($pseudo);
 
-      $bindings = ['id_kinow' => $id_kinow];
+    $query = "INSERT INTO subscribers (id_kinow, email, pseudo) VALUES (:id_kinow, :email, :pseudo)";
 
-      $id_subscriber = DB::selectOne($query, $bindings)->id_subscriber;
-    } else {
+    $bindings = ['id_kinow' => $id_kinow, 'email' => $email, 'pseudo' => $cleanPseudo];
 
-      // Create subscriber row in subscriber table
-      $query = "INSERT INTO subscribers (id_kinow, email, pseudo) VALUES (:id_kinow, :email, :pseudo)";
+    $array = DB::insert($query, $bindings);
 
-      $bindings = ['id_kinow' => $id_kinow, 'email' => $email, 'pseudo' => $cleanPseudo];
-
-      DB::insert($query, $bindings);
-
-      $id_subscriber = DB::getPdo()->lastInsertId();
-    }
-
-    // Create comment row in comment table
-    $query = "INSERT INTO comments (id_subscriber_fk, id_film, film_title, content) VALUES (:id_subscriber_fk, :id_film, :film_title, :content)";
-
-    $bindings = ['id_subscriber_fk' => $id_subscriber, 'id_film' => $id_film, 'film_title' => $film_title, 'content' => $cleanContent];
-
-    DB::insert($query, $bindings);
-
-    $id_comment = DB::getPdo()->lastInsertId();
-
-    // Create moderation row in moderation table
-    $query = "INSERT INTO moderations (id_comment_fk, id_moderator_fk, status) VALUES (:id_comment_fk, :id_moderator_fk, :status)";
-
-    $bindings = ['id_comment_fk' => $id_comment, 'id_moderator_fk' => 27, 'status' => 'Valide'];
-
-    DB::insert($query, $bindings);
-
-    return true;
+    return 'Added successfully.';
   }
 }

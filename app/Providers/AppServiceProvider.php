@@ -28,7 +28,6 @@ class AppServiceProvider extends ServiceProvider
             $resultObject = new Comment();
 
             $resultObject->id = $data->id_comment;
-            $resultObject->title = $data->title;
             $resultObject->content = $data->content;
             $resultObject->created_at = $data->created_at;
 

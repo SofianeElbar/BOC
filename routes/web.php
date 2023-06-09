@@ -21,50 +21,52 @@ $router->group(["prefix" => "api"], function () use ($router) {
 
     /*
 |--------------------------------------------------------------------------
-| Comment Routes
+| Public Routes
 |--------------------------------------------------------------------------
 */
 
-    $router->get("allcomments", ["uses" => 'CommentController@getAllComments']);
+    $router->get("film/{id}/allvalidcomments", ["uses" => 'CommentController@getAllValidCommentsByFilm']);
 
-    $router->get("allvalidcomments", ["uses" => 'CommentController@getAllValidComments']);
+    $router->get('subscriber/{id}/allcomments', ['uses' => 'SubscriberController@getAllCommentsBySubscriber']);
 
-    $router->post("film/allcomments", ["uses" => 'CommentController@getAllCommentsByFilm']);
+    $router->get('subscriber/{a}/film/{b}/alreadycommented', ['uses' => 'SubscriberController@alreadyCommented']);
 
-    $router->post("film/allvalidcomments", ["uses" => 'CommentController@getAllValidCommentsByFilm']);
+    $router->get('subscriber/{id}/pseudo', ['uses' => 'SubscriberController@getPseudo']);
 
-    // $router->get("film/{id}/authors", ["uses" => 'AppController@showAuthorsByFilm']);
+    $router->post('create', ['uses' => 'CommentController@createComment']);
+
+    $router->put('subscriber/{id}/modifypseudo', ['uses' => 'SubscriberController@modifyPseudo']);
 
     /*
 |--------------------------------------------------------------------------
-| Subscriber Routes
+| Admin Routes
 |--------------------------------------------------------------------------
 */
 
-    $router->post('subscriber/allcomments', ['uses' => 'SubscriberController@getAllCommentsBySubscriber']);
-
-    $router->post('subscriber/pseudo', ['uses' => 'SubscriberController@getPseudo']);
-
-    $router->put('subscriber/modifypseudo', ['uses' => 'SubscriberController@modifyPseudo']);
-
-    $router->post('subscriber/alreadycommented', ['uses' => 'SubscriberController@alreadyCommented']);
-
-    $router->post('create', ['uses' => 'SubscriberController@createComment']);
-
-
-
-    $router->delete('delete/{id}', ['uses' => 'AppController@deleteComment']);
-
-    $router->put('comments/{id}', ['uses' => 'AppController@updateComment']);
-
-    // Moderation routes
-    $router->put('changestatus/{id}', ['uses' => 'AppController@changeCommentStatus']);
-
-    $router->put('modify/{id}', ['uses' => 'AppController@modifyComment']);
+    // à sécuriser
+    $router->get("allcomments", ["uses" => 'CommentController@getAllComments']);
 
     $router->put('moderate/{id}', ['uses' => 'AppController@moderateComment']);
 
     $router->put('validate/{id}', ['uses' => 'AppController@validateComment']);
 
     $router->put('reject/{id}', ['uses' => 'AppController@rejectComment']);
+
+    // à sécuriser
+    // $router->get("allvalidcomments", ["uses" => 'CommentController@getAllValidComments']);
+
+    // passer en get
+    // $router->get("film/{id}/allcomments", ["uses" => 'CommentController@getAllCommentsByFilm']);
+
+    // $router->get("film/{id}/authors", ["uses" => 'AppController@showAuthorsByFilm']);
+
+    // à exclure
+    // $router->delete('delete/{id}', ['uses' => 'AppController@deleteComment']);
+
+    // $router->put('comments/{id}', ['uses' => 'AppController@updateComment']);
+
+    // Moderation routes
+    // $router->put('changestatus/{id}', ['uses' => 'AppController@changeCommentStatus']);
+
+    // $router->put('modify/{id}', ['uses' => 'AppController@modifyComment']);
 });
