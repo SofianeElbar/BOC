@@ -21,42 +21,16 @@ class CommentController extends BaseController
     $this->subscriberRepository = $subscriberRepository;
   }
 
-  // function getAllComments()
-  // {
-  //   $result = $this->commentRepository->getAllComments();
+  function getAllComments()
+  {
+    $result = $this->commentRepository->getAllComments();
 
-  //   if (count($result) === 0) {
-  //     return response()->json(['No comments found.'], 404);
-  //   } else {
-  //     return AppServiceProvider::translateIntoArrayofObjects($result);
-  //   }
-  // }
-
-  // function getAllValidComments()
-  // {
-  //   $result = $this->commentRepository->getAllValidComments();
-
-  //   if (count($result) === 0) {
-  //     return response()->json(['No comments found.'], 404);
-  //   } else {
-  //     return AppServiceProvider::translateIntoArrayofObjects($result);
-  //   }
-  // }
-
-  // function getAllCommentsByFilm($id)
-  // {
-  //   if (!$id) {
-  //     return response()->json(['No argument passed.'], 404);
-  //   } else {
-  //     $result = $this->commentRepository->getAllCommentsByFilm($id);
-  //   }
-
-  //   if (!$result) {
-  //     return response()->json(['No comments found.'], 404);
-  //   } else {
-  //     return AppServiceProvider::translateIntoArrayofObjects($result);
-  //   }
-  // }
+    if (!$result) {
+      return response()->json(['error' => 'No comments found.'], 404);
+    } else {
+      return AppServiceProvider::translateIntoArrayofObjects($result);
+    }
+  }
 
   function getAllValidCommentsByFilm($id)
   {
@@ -83,7 +57,7 @@ class CommentController extends BaseController
     $id_film = $request->input('idFilm');
     $film_title = $request->input('filmTitle');
 
-    // Check if there are empty fields
+    // Filter 1: check if there are empty fields
     $field_to_check = ['content', 'email', 'pseudo', 'idKinow', 'idFilm', 'filmTitle'];
     $emptyFields = [];
 
@@ -97,10 +71,10 @@ class CommentController extends BaseController
       return response()->json(['Oops, empty fields: ' . implode(", ", $emptyFields)], 404);
     }
 
-    // Check if subscriber already exists in database
+    // Filter 2: check if subscriber already exists in database
     $id_subscriber = $this->subscriberRepository->getSubscriberDatabaseId($id_kinow);
 
-    // Check if subscriber has already commented
+    // Filter 3: check if subscriber has already commented
     $has_commented = $this->subscriberRepository->alreadyCommented($id_kinow, $id_film);
 
     if ($id_subscriber === null && !$has_commented) {

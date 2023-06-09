@@ -50,7 +50,7 @@ class SubscriberRepository
 
     $array = DB::update($query, $bindings);
 
-    return $array > 0;
+    return (bool) $array;
   }
 
   function alreadyCommented($id_kinow, $id_film)

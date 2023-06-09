@@ -7,45 +7,18 @@ use Illuminate\Support\Facades\DB;
 class CommentRepository
 {
 
-  // function getAllComments()
-  // {
-  //   $query = "SELECT * FROM comments 
-  //             JOIN moderations ON moderations.id_comment_fk = comments.id_comment 
-  //             JOIN subscribers ON subscribers.id_subscriber = comments.id_subscriber_fk";
+  function getAllComments()
+  {
+    $query = "SELECT * FROM comments 
+              JOIN moderations ON moderations.id_comment_fk = comments.id_comment 
+              JOIN subscribers ON subscribers.id_subscriber = comments.id_subscriber_fk";
 
-  //   $bindings = [];
+    $bindings = [];
 
-  //   $array = DB::select($query, $bindings);
+    $array = DB::select($query, $bindings);
 
-  //   return $array;
-  // }
-
-  // function getAllValidComments()
-  // {
-  //   $query = "SELECT * FROM comments 
-  //             JOIN moderations ON moderations.id_comment_fk=comments.id_comment 
-  //             JOIN subscribers ON subscribers.id_subscriber=comments.id_subscriber_fk WHERE status = :valide";
-
-  //   $bindings = ['valide' => 'Valide'];
-
-  //   $array = DB::select($query, $bindings);
-
-  //   return $array;
-  // }
-
-  // function getAllCommentsByFilm($id)
-  // {
-
-  //   $query = "SELECT * FROM comments 
-  //             JOIN moderations ON moderations.id_comment_fk=comments.id_comment 
-  //             JOIN subscribers ON subscribers.id_subscriber=comments.id_subscriber_fk WHERE id_film = :id";
-
-  //   $bindings = ['id' => $id];
-
-  //   $array = DB::select($query, $bindings);
-
-  //   return $array;
-  // }
+    return $array;
+  }
 
   function sanitizeInput($input)
   {
@@ -58,9 +31,9 @@ class CommentRepository
 
     $query = "SELECT * FROM comments 
               JOIN moderations ON moderations.id_comment_fk=comments.id_comment 
-              JOIN subscribers ON subscribers.id_subscriber=comments.id_subscriber_fk WHERE status = :valide AND id_film = :id";
+              JOIN subscribers ON subscribers.id_subscriber=comments.id_subscriber_fk WHERE status IN (:valide, :relire) AND id_film = :id";
 
-    $bindings = ['id' => $id_film, 'valide' => 'Valide'];
+    $bindings = ['id' => $id_film, 'valide' => 'Valide', 'relire' => 'A relire'];
 
     $array = DB::select($query, $bindings);
 

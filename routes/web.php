@@ -43,30 +43,11 @@ $router->group(["prefix" => "api"], function () use ($router) {
 |--------------------------------------------------------------------------
 */
 
-    // à sécuriser
     $router->get("allcomments", ["uses" => 'CommentController@getAllComments']);
 
-    $router->put('moderate/{id}', ['uses' => 'AppController@moderateComment']);
+    $router->put('moderate/{id}', ['uses' => 'ModerationController@moderateComment']);
 
-    $router->put('validate/{id}', ['uses' => 'AppController@validateComment']);
+    $router->put('validate/{id}', ['uses' => 'ModerationController@validateComment']);
 
-    $router->put('reject/{id}', ['uses' => 'AppController@rejectComment']);
-
-    // à sécuriser
-    // $router->get("allvalidcomments", ["uses" => 'CommentController@getAllValidComments']);
-
-    // passer en get
-    // $router->get("film/{id}/allcomments", ["uses" => 'CommentController@getAllCommentsByFilm']);
-
-    // $router->get("film/{id}/authors", ["uses" => 'AppController@showAuthorsByFilm']);
-
-    // à exclure
-    // $router->delete('delete/{id}', ['uses' => 'AppController@deleteComment']);
-
-    // $router->put('comments/{id}', ['uses' => 'AppController@updateComment']);
-
-    // Moderation routes
-    // $router->put('changestatus/{id}', ['uses' => 'AppController@changeCommentStatus']);
-
-    // $router->put('modify/{id}', ['uses' => 'AppController@modifyComment']);
+    $router->put('reject/{id}', ['uses' => 'ModerationController@rejectComment']);
 });
