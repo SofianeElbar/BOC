@@ -50,7 +50,7 @@ class SubscriberRepository
 
     $array = DB::update($query, $bindings);
 
-    return (bool) $array;
+    return $array;
   }
 
   function alreadyCommented($id_kinow, $id_film)
@@ -67,7 +67,7 @@ class SubscriberRepository
 
     $array = DB::select($query, $bindings);
 
-    return (bool) $array;
+    return $array;
   }
 
   function getSubscriberDatabaseId($id_kinow)
